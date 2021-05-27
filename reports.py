@@ -5,8 +5,8 @@ import os
 import datetime
 
 def get_paragraph(source_path="supplier-data/descriptions/"):
+  r_txt=''
   nl="\n"
-  r_text=""
   for fp in os.listdir(source_path):
     with open(os.path.join(source_path, fp), 'rt') as textfile:
       record_ = [l for l in textfile.readlines()]
@@ -15,8 +15,9 @@ weight: {record_[1].replace(nl,'')}
 
 """
     #print(record_s)
-      r_text += record_s
-  return(r_text)
+      record_s.replace('\n','<br />\n')
+      r_txt+=record_s
+  return(r_txt)
 
 
 def generate_report(attachment="/tmp/processed.pdf", title=f'Processed Update on {datetime.datetime.now().strftime("%B %d, %Y")}', paragraph=get_paragraph()):
@@ -30,7 +31,7 @@ def generate_report(attachment="/tmp/processed.pdf", title=f'Processed Update on
   #report_title = Paragraph("Processed Update on "+datestr, styles["h1"])
   report_title = Paragraph(title, styles["h1"])
 
-  report.build([report_title, Paragraph(paragraph)])
+  report.build([report_title, Paragraph(paragraph, style=styles)])
 
 if __name__ == "__main__":
   generate_report()
