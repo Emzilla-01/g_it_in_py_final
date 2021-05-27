@@ -22,7 +22,7 @@ for fp in os.listdir(source_path):
              }
     #print(record)
     #json_lst.append(record)
-    results.append(requests.post("http://35.188.21.210/fruits/", data=record))
+    results.append(requests.post("http://34.70.151.237/fruits/", data=record))
 
 print(results)
 
