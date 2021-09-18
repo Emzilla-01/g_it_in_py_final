@@ -5,6 +5,8 @@ import socket
 import emails
 from cfg import user
 
+FLOWERBOX_="#"*80
+
 def check_cpu():
   c = psutil.cpu_percent(interval=0.2)
   if c > 80:
@@ -38,7 +40,7 @@ def check_mem():
     m_ = emails.generate_email(from_="automation@example.com",
                     to = user+"@example.com",
                     subject="Error - Available memory is less than 500MB",
-                    body="Please check your system and resolve the issue as soon as possible.",
+                    body=f"Available memory: {av}MB"+"Please check your system and resolve the issue as soon as possible.",
                     attachment=None)
     emails.send_email(m_)
 
@@ -51,7 +53,7 @@ def check_localhost():
     m_ = emails.generate_email(from_="automation@example.com",
                     to = user+"@example.com",
                     subject="Error - localhost cannot be resolved to 127.0.0.1",
-                    body="Please check your system and resolve the issue as soon as possible.",
+                    body=f"localhost resolves to {ip}..."+"Please check your system and resolve the issue as soon as possible.",
                     attachment=None)
     emails.send_email(m_)
   return(f"localhost resolves to {ip}")
@@ -60,6 +62,12 @@ def main():
   output=[]
   for f in [check_cpu, check_mem, check_disk, check_localhost]:
     output.append(str(f()))
+  m_ = emails.generate_email(from_="automation@example.com",
+                  to = user+"@example.com",
+                  subject="Server health checks",
+                  body=FLOWERBOX_.join(output)
+                  attachment=None)
+  emails.send_email(m_)
   print(output)
 
 if __name__ == "__main__":
